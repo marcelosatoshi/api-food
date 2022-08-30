@@ -1,6 +1,7 @@
 package com.marcelo.food.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ public class EstadoController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Estado> buscar(@PathVariable Long id) {
-		Estado estado = cadastroEstadoService.buscar(id);
+		Optional<Estado> estado = cadastroEstadoService.buscar(id);
 
-		if (estado != null) {
-			return ResponseEntity.ok(estado);
+		if (estado.isPresent()) {
+			return ResponseEntity.ok(estado.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -53,13 +54,13 @@ public class EstadoController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
-		Estado estadoBanco = cadastroEstadoService.buscar(id);
+		Optional<Estado> estadoBanco = cadastroEstadoService.buscar(id);
 
-		if (estadoBanco != null) {
-			BeanUtils.copyProperties(estado, estadoBanco, "id");
+		if (estadoBanco.isPresent()) {
+			BeanUtils.copyProperties(estado, estadoBanco.get(), "id");
 
-			estadoBanco = cadastroEstadoService.salvar(estadoBanco);
-			return ResponseEntity.ok(estadoBanco);
+		Estado	estadoSalvo = cadastroEstadoService.salvar(estadoBanco.get());
+			return ResponseEntity.ok(estadoSalvo);
 
 		}
 		return ResponseEntity.notFound().build();

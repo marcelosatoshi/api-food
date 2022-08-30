@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.marcelo.food.domain.exception.EntidadeNaoEncontradaException;
-import com.marcelo.food.domain.exception.EntidadeNulaException;
 import com.marcelo.food.domain.model.Cozinha;
 import com.marcelo.food.domain.model.Restaurante;
 import com.marcelo.food.domain.repository.CozinhaRepository;
@@ -21,16 +20,12 @@ public class CadastroRestauranteService {
 
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
-
-		if (cozinha == null) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe cadastro de cozinha  em codigo %d", cozinhaId));
-		}
-
+		Cozinha cozinha = cozinhaRepository.findById(cozinhaId).orElseThrow(() -> new EntidadeNaoEncontradaException(
+				String.format("Não existe cadastro de cozinha  em codigo %d", cozinhaId)));
+		
 		restaurante.setCozinha(cozinha);
 
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 
 }

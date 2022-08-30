@@ -2,9 +2,12 @@ package com.marcelo.food.domain.repository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.marcelo.food.domain.model.FormaPagamento;
 
-public interface FormaPagamentoRepository {
+@Repository
+public interface PagamentoRepository {
 
 	List<FormaPagamento> listar();
 
