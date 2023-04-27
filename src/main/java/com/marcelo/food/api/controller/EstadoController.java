@@ -1,7 +1,8 @@
 package com.marcelo.food.api.controller;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marcelo.food.domain.exception.EntidadeEmUsoException;
-import com.marcelo.food.domain.exception.EntidadeNaoEncontradaException;
 import com.marcelo.food.domain.model.Estado;
 import com.marcelo.food.domain.service.CadastroEstadoService;
 
 @RestController
-@RequestMapping("/estado")
+@RequestMapping("/estados")
 public class EstadoController {
 
 	@Autowired
@@ -35,47 +34,32 @@ public class EstadoController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Estado> buscar(@PathVariable Long id) {
-		Optional<Estado> estado = cadastroEstadoService.buscar(id);
-
-		if (estado.isPresent()) {
-			return ResponseEntity.ok(estado.get());
-		}
-
-		return ResponseEntity.notFound().build();
+	public Estado buscar(@PathVariable Long id) {
+		return cadastroEstadoService.buscarOuFalhar(id);
 
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Estado inserir(@RequestBody Estado estado) {
+	public Estado inserir(@RequestBody @Valid Estado estado) {
 		return cadastroEstadoService.salvar(estado);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
-		Optional<Estado> estadoBanco = cadastroEstadoService.buscar(id);
+	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
+		Estado estadoBanco = cadastroEstadoService.buscarOuFalhar(id);
 
-		if (estadoBanco.isPresent()) {
-			BeanUtils.copyProperties(estado, estadoBanco.get(), "id");
+		BeanUtils.copyProperties(estado, estadoBanco, "id");
 
-		Estado	estadoSalvo = cadastroEstadoService.salvar(estadoBanco.get());
-			return ResponseEntity.ok(estadoSalvo);
+		return cadastroEstadoService.salvar(estadoBanco);
 
-		}
-		return ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletar(@PathVariable Long id) {
-		try {
-			cadastroEstadoService.excluir(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+
+		cadastroEstadoService.excluir(id);
+		return ResponseEntity.noContent().build();
 
 	}
 }

@@ -3,6 +3,8 @@ package com.marcelo.food.api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,51 +41,39 @@ public class CozinhaController {
 	}
 	
 	
-	@GetMapping("{/id}")
-	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
-		Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
+	@GetMapping("/{id}")
+	public Cozinha buscar(@PathVariable Long id) {
+		return cadastroCozinha.buscarOuFalhar(id);
 		
-		if (cozinha.isPresent()) {
-			return  ResponseEntity.ok(cozinha.get());
-		}
 		
-		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha inserir(@RequestBody  Cozinha cozinha) {
+	public Cozinha inserir(@RequestBody @Valid  Cozinha cozinha) {
 		return cadastroCozinha.salvar(cozinha);
 	}
 	
 
 	@PutMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId,
-			@RequestBody Cozinha cozinha) {
-		Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
+	public Cozinha atualizar(@PathVariable Long cozinhaId,
+			@RequestBody @Valid Cozinha cozinha) {
+		Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
 		
-		if (cozinhaAtual.isPresent()) {
+	
 //			cozinhaAtual.setNome(cozinha.getNome());
-			BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 			
-		Cozinha	cozinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
-			return ResponseEntity.ok(cozinhaSalva);
-		}
+		return  cadastroCozinha.salvar(cozinhaAtual);
 		
-		return ResponseEntity.notFound().build();
+		
+		
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Cozinha> deletar(@PathVariable Long id) {
-		try {	
+	public ResponseEntity<Cozinha> deletar(@PathVariable Long id) {	
 		 cadastroCozinha.excluir(id);
-		 return ResponseEntity.noContent().build();
-	
-		} catch (EntidadeEmUsoException e) {
-			return	ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+		 return ResponseEntity.noContent().build();		
 	}
 }
 	

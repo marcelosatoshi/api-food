@@ -15,7 +15,7 @@ import com.marcelo.food.domain.repository.CozinhaRepository;
 import com.marcelo.food.domain.repository.RestauranteRepository;
 
 @RestController
-@RequestMapping("/teste")
+@RequestMapping("/testes")
 public class TesteController {
 
 	@Autowired
@@ -54,7 +54,7 @@ public class TesteController {
 		return restauranteRepository.findFirstRestauranteByNomeContaining(nome);
 	}
 	
-	@GetMapping("/restaurantes/top2-por-nome")
+	@GetMapping("/restaurantes/por-nome-frete")
 	public List<Restaurante> restaurantePorNomeFrete(String nome, BigDecimal taxaInicial , BigDecimal taxaFinal) {
 		return restauranteRepository.find(nome,taxaInicial,taxaFinal);
 	}
@@ -69,5 +69,12 @@ public class TesteController {
 	public int restaurantesCountPorCozinha(Long cozinhaId) {
 		return restauranteRepository.countByCozinhaId(cozinhaId);
 	}
+	
+
+	@GetMapping("/restaurantes/com-frete-gratis")
+	public List<Restaurante> restaurantesComFreteGratis(String nome) {
+		return restauranteRepository.findComFreteGratis(nome);
+	}
+	
 	
 }
