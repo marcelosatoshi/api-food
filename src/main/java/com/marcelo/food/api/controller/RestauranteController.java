@@ -3,7 +3,6 @@ package com.marcelo.food.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -18,7 +17,6 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,10 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marcelo.food.core.validarion.Groups;
 import com.marcelo.food.domain.exception.CozinhaNaoEncontradaException;
-import com.marcelo.food.domain.exception.EntidadeNaoEncontradaException;
-import com.marcelo.food.domain.exception.EstadoNaoEncontradaException;
 import com.marcelo.food.domain.exception.NegocioException;
 import com.marcelo.food.domain.exception.ValidacaoException;
 import com.marcelo.food.domain.model.Restaurante;

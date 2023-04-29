@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
-import com.marcelo.food.core.validarion.Groups;
+import com.marcelo.food.core.validation.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

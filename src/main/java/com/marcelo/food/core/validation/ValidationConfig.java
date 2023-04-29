@@ -1,4 +1,4 @@
-package com.marcelo.food.core.validarion;
+package com.marcelo.food.core.validation;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

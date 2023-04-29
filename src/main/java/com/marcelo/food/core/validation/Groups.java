@@ -1,4 +1,4 @@
-package com.marcelo.food.core.validarion;
+package com.marcelo.food.core.validation;
 
 public interface Groups {
 	

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.marcelo.food.core.validarion.Groups;
+import com.marcelo.food.core.validation.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
