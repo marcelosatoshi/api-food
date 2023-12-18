@@ -1,8 +1,8 @@
 package com.marcelo.food.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +29,7 @@ public class Usuario {
 	private Long id;
 
 	@Column(nullable = false) 
-	private String name;
+	private String nome;
 	
 	@Column(nullable = false) 
 	private String email;
@@ -45,5 +45,22 @@ public class Usuario {
     @ManyToMany
     @JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-    private List<Grupo> grupos = new ArrayList<>();
+    private Set<Grupo> grupos = new HashSet<>();
+    
+    public void removerGrupos(Grupo grupo) {
+    	getGrupos().remove(grupo);
+    }
+    
+    public void adicionarGrupos(Grupo grupo) {
+    	getGrupos().add(grupo);
+    }
+    
+    
+    public boolean senhaCoincideCom(String senhaAtual) {
+    	return getSenha().equals(senhaAtual);
+    }
+    
+    public boolean senhaNaoCoincideCom(String senhaAtual) {
+    	return !senhaCoincideCom(senhaAtual);
+    }
 }

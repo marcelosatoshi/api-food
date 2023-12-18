@@ -3,7 +3,9 @@ package com.marcelo.food.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -44,21 +46,29 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@NotNull
-	@NotEmpty
-	@NotBlank
 	@Column(nullable = false) 
 	private String nome;
 
 	//@DecimalMin("0")
-	@NotNull
-	@PositiveOrZero
 	@Column(name = "taxa_frete" , nullable = false)
 	private BigDecimal taxaFrete;
 	
 	
 	@Embedded
 	private Endereco endereco;
+	
+	private boolean ativo = Boolean.TRUE;
+	
+	private boolean aberto = Boolean.FALSE;
+	
+	public void abrir() {
+		setAberto(true);
+	}
+	
+	public void fechar() {
+		setAberto(false);
+	}
+
 	
 	
 	@CreationTimestamp
@@ -75,11 +85,9 @@ public class Restaurante {
 	@JoinTable(name = "restaurante_forma_pagamento",
 			joinColumns = @JoinColumn(name = "restaurante_id"),
 			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-	private List<FormaPagamento> formasPagamentos = new ArrayList<>();
+	private Set<FormaPagamento> formasPagamentos = new HashSet<>();
 	
-	@Valid
-	@ConvertGroup(from = Default.class , to = Groups.CozinhaId.class)
-	@NotNull
+	//@ConvertGroup(from = Default.class , to = Groups.CozinhaId.class)
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id" , nullable = false)
 	private Cozinha cozinha;
@@ -87,5 +95,29 @@ public class Restaurante {
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
+	
+	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+			joinColumns = @JoinColumn(name = "restaurante_id"),
+			inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> usuariosResponsaveis  = new HashSet<>();
+	
+	
+	public boolean removerResponsavel(Usuario usuario) {
+	    return getUsuariosResponsaveis().remove(usuario);
+	}
+
+	public boolean adicionarResponsavel(Usuario usuario) {
+	    return getUsuariosResponsaveis().add(usuario);
+	}
+	
+	public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+	    return getFormasPagamentos().contains(formaPagamento);
+	}
+
+	public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+	    return !aceitaFormaPagamento(formaPagamento);
+	}
 
 }

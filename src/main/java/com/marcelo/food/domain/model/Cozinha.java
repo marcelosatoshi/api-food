@@ -32,9 +32,6 @@ public class Cozinha {
 	private Long id;
 
 //	@JsonIgnore
-	@NotBlank
-	@NotNull
-	@NotEmpty
 	@Column(nullable = false)
 	private String nome;
 	
